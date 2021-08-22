@@ -2,12 +2,13 @@ let MongoClient = require('mongodb').MongoClient;
 let url = "mongodb://localhost:27017/CarData"
 let crypto = require('crypto');
 let Web3 = require('web3')
-let web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
 const registerController = require('../controllers/registerController');
 let contract_list = registerController.get_contract_list();
 let db = null;
 let register_db = null;
 let count = 0;
+let preBlockNum = 0;
 let data = [
     {
         "index": 0,
@@ -325,7 +326,7 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
         console.log(err);
     }
     db = await client.db('CarData');
-    register_db =db.collection('Registration')
+    register_db = db.collection('Registration')
     db = db.collection('Event')
     console.log('Database connected: Cardata');
     console.log(contract_list)
@@ -349,41 +350,75 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
     // let result = await db.find({}).toArray();
     // console.log(result)
 });
-async function getcarID(address){
-    let car_obj = await register_db.find({ contractAddress:address}).toArray();
-    console.log(car_obj)
-    carid = car_obj[0].carID;
-    console.log("carid")
-    console.log(carid)
-    return carid;
+async function getcarID(address) {
+    return new Promise(async (resolve, reject) => {
+        let car_obj = await register_db.find({ contractAddress: address }).toArray();
+        console.log(car_obj)
+        carid = car_obj[0].carID;
+        console.log("carid")
+        console.log(carid)
+        resolve(carid);
+    })
+}
+async function getCarData(carid) {
+    let check = await db.find({ carID: carid }).toArray();
+    console.log('check')
+    console.log(check)
+    return check;
 }
 async function checkBlock() {
     let block = await web3.eth.getBlock('latest');
     let number = block.number;
+    if (preBlockNum == number)
+        return;
+    preBlockNum = number;
     console.log("Searching block" + number)
     console.log(block.transactions)
     if (block != null && block.transactions != null) {
         for (let txHash of block.transactions) {
             web3.eth.getTransactionReceipt(txHash)
-                .then(function (result) {
-                    if(result.logs[0]!=undefined){
+                .then(async function (result) {
+                    if (result.logs[0] != undefined) {
                         const index = contract_list.indexOf(result.logs[0].address);
-                        let carid = getcarID(result.logs[0].address);
+                        let carid = await getcarID(result.logs[0].address);
                         if (index > -1) {
                             const typesArray = [
                                 { type: 'string', name: 'data' },
                             ];
                             const decodedParameters = web3.eth.abi.decodeParameters(typesArray, result.logs[0].data);
-                            console.log(decodedParameters)
+                            // console.log(decodedParameters.data)
+                            let data1 = JSON.parse(JSON.parse(decodedParameters.data))
+                            // console.log(data['criticalEvent'])
+                            let c_data = data1["criticalEvent"]
+                            console.log(data1)
+                            console.log(c_data)
+                            let e_data = data1.eventList
+                            // let check = getCarData(carid)
+                            // if (check.length == 0) {
                             var newobj = {
-                                carID: carid,
-                                timestamp: data[i]['current'].timestamp,
-                                criticalEvent: data[i]['current'],
-                                eventList: data[i]['past'],
-                                index: count
+                                "carID": carid,
+                                "timestamp": JSON.parse(c_data).timestamp,
+                                "criticalEvent": c_data,
+                                "eventList": e_data,
+                                "index": count
                             }
-                            count=count+1;
-                            db.updateOne({carID:carid}, {$set: newobj})
+                            console.log('newobj')
+                            console.log(newobj)
+                            count = count + 1;
+                            db.insertOne(newobj, function (err, res) {
+                                if (err) throw err;
+                                console.log("1 document inserted");
+                            });
+                            // }
+                            // else {
+                            //     var newobj = {
+                            //         timestamp: c_data.timestamp,
+                            //         criticalEvent: c_data,
+                            //         eventList: e_data
+                            //     }
+                            //     db.updateOne({ 'carID': carid }, { $set: newobj })
+                            //     console.log("update succeed")
+                            // }
                         }
                     }
                 });
@@ -398,8 +433,10 @@ setInterval(() => {
 
 const getList = async (req, res) => {
     console.log(req.query.carID);
+    let all = await db.find({}).toArray();
+    console.log(all)
     let result = await db.find({ carID: req.query.carID }).toArray();
-    // console.log(result);
+    console.log(result);
     return res.status(200).json({ code: 20000, data: result })
     // res.send(result);
 }

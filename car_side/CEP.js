@@ -1,5 +1,8 @@
 const { fromEvent, of } = require('rxjs');
 var CEDP = require('./CEDP.js');
+var request = require('request');
+let Web3 = require('web3');
+let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
 
 const QueueLength = 30;
 
@@ -60,7 +63,7 @@ let contractAbi = [
         "type": "function"
     }
 ]
-let contractAddr = '0x7CA8aB8fda99eE7563843e84F969123C89c219D9';
+let contractAddr = '0x91C8FD9C8537726A15465b7a81CBAcE64C547705';
 
 let cedp = new CEDP(contractAbi, contractAddr);
 
@@ -83,12 +86,13 @@ class CEP {
                     let raw = await cedp.signData(JSON.stringify(packet));
                     // console.log(raw);
                     console.log('--- CEP: send raw to blockchainGW ---')
-                    request('http://140.119.163.196:5000/sendRawTransaction?raw=' + raw, function (error, response, body) {
-                        if (!error && response.statusCode == 200) {
-                            // console.log(response.body);
-                            console.log('--- blockchainGW: write data to blockchain ---')
-                        }
-                    });
+                    // request('http://140.119.163.196:5000/sendRawTransaction?raw=' + raw, function (error, response, body) {
+                    //     if (!error && response.statusCode == 200) {
+                    //         // console.log(response.body);
+                    //         console.log('--- blockchainGW: write data to blockchain ---')
+                    //     }
+                    // });
+                    web3.eth.sendSignedTransaction('0x' + raw).then(receipt => console.log(receipt));
                 }
             }
         });

@@ -1,0 +1,27 @@
+{
+  "name": "itri_v2x",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "ethereum-public-key-to-address": "^0.0.5",
+    "ethereumjs-common": "^1.5.2",
+    "ethereumjs-tx": "^2.1.2",
+    "mongodb": "^4.1.0",
+    "mqtt": "^4.2.8",
+    "request": "^2.88.2",
+    "rxjs": "^6.6.7",
+    "secp256k1": "^4.0.2",
+    "serialport": "^9.2.0",
+    "web3": "^1.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -4,7 +4,10 @@ crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 let Web3 = require('web3')
 // let web3 = new Web3("http://127.0.0.1:8545");
-let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
+const EthereumTx = require('ethereumjs-tx').Transaction;
+const Common = require('ethereumjs-common').default;
+var privateKey = new Buffer('DF65655AFE6FF509C20A966C1D52EB7ED94BD86AD33FA6E3FF1E2793778653A9', 'hex')
 
 const abi = [
 	{
@@ -86,14 +89,14 @@ let contract_list = []
 let db = null;
 
 MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, async (err, client) => {
-    if (err) {
-        console.log(err);
-    }
-    db = await client.db('CarData');
-    db = db.collection('Registration')
-    console.log('Database connected: Cardata');
+	if (err) {
+		console.log(err);
+	}
+	db = await client.db('CarData');
+	db = db.collection('Registration')
+	console.log('Database connected: Cardata');
 	let result = await db.find({}).toArray();
-	for (let obj of result){
+	for (let obj of result) {
 		contract_list.push(obj.contractAddress);
 	}
 	console.log(contract_list)
@@ -101,67 +104,96 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
 
 
 const getCars = async (req, res) => {
-    console.log("hi");
-    let result = await db.find({}).toArray();
-    console.log(result);
-    return res.status(200).json({ code: 20000, data: result })
-    // res.send(result);
+	console.log("hi");
+	let result = await db.find({}).toArray();
+	console.log(result);
+	return res.status(200).json({ code: 20000, data: result })
+	// res.send(result);
 }
 const addCar = async (req, res) => {
-    console.log(req.body)
-    var newContract = new web3.eth.Contract(abi);
-    console.log(newContract)
-    newContract.deploy({
-        data: '0x' + bytecode.object,
-        arguments: [
-        ]
-    }).send({
-        from: "0xf5b8e48ce98285f208fbb153cebe58b43c00c5e4",
-        gas: '4700000'
-    })
-        .then(function (newContractInstance) {
-            console.log(newContractInstance.options.address) // instance with the new contract address
-			contract_list.push(newContractInstance.options.address);
-			console.log(contract_list)
-            var newobj = {
-                carAddress: req.body.carAddress,
-                carID: uuidv4(),
-                contractAddress: newContractInstance.options.address
-            }
-            db.insertOne(newobj, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
-            });
+	console.log(req.body)
+	var newContract = new web3.eth.Contract(abi);
+	let sdata = newContract.deploy({
+		data: '0x' + bytecode.object,
+		arguments: [
+		]
+	}).encodeABI();
 
-            return res.status(200).json({ code: 20000, data: newobj })
-        });
+	web3.eth.getTransactionCount('0xfccBFe26448d3Ea0739084cD09ce286189CC2cd2').then(txCount => {
+		let newNonce = web3.utils.toHex(txCount);
+		web3.eth.getGasPrice().then(async (gasPrice) => {
+			//產生tx
+			let txParams = {
+				nonce: newNonce,
+				gasPrice: parseInt(gasPrice),
+				gas: '0xF4240',
+				from: '0xfccBFe26448d3Ea0739084cD09ce286189CC2cd2',
+				// value: '0xDE0B6B3A7640000',
+				data: sdata,
+			}
+			const customCommon = Common.forCustomChain(
+				'mainnet',
+				{
+					chainId: 27596,
+					networkId: 27596,
+				},
+				'petersburg',
+			)
+
+			tx = new EthereumTx(txParams, { common: customCommon })
+			tx.sign(privateKey);
+
+			var raw = tx.serialize();
+			// console.log(raw);
+			web3.eth.sendSignedTransaction('0x' + raw.toString('hex')).then(receipt => {
+				console.log(receipt.contractAddress) // instance with the new contract address
+				contract_list.push(receipt.contractAddress);
+				console.log(contract_list)
+				var newobj = {
+					carAddress: req.body.carAddress,
+					carID: uuidv4(),
+					contractAddress: receipt.contractAddress
+				}
+				db.insertOne(newobj, function (err, res) {
+					if (err) throw err;
+					console.log("1 document inserted");
+				});
+
+				return res.status(200).json({ code: 20000, data: newobj })
+
+			})
+		})
+	})
+
+
+
 }
 const deleteCar = async (req, res) => {
-    console.log("id")
-    var id = req.params.id;
-    console.log(id)
-    var myquery = { carAddress: id };
+	console.log("id")
+	var id = req.params.id;
+	console.log(id)
+	var myquery = { carAddress: id };
 	let result = await db.find(myquery).toArray();
 	console.log('result');
 	console.log(result);
 	const index = contract_list.indexOf(result[0].contractAddress);
 	if (index > -1) {
-  		contract_list.splice(index, 1);
+		contract_list.splice(index, 1);
 	}
-    db.deleteOne(myquery, function (err, res) {
-        if (err) throw err;
-        console.log("1 document deleted");
-    })
+	db.deleteOne(myquery, function (err, res) {
+		if (err) throw err;
+		console.log("1 document deleted");
+	})
 
-    return res.status(200).json({ code: 20000, data: 'success' })
+	return res.status(200).json({ code: 20000, data: 'success' })
 }
-function get_contract_list(){
+function get_contract_list() {
 	console.log(contract_list)
 	return contract_list
 }
 module.exports = {
-    getCars,
-    addCar,
-    deleteCar,
+	getCars,
+	addCar,
+	deleteCar,
 	get_contract_list
 }

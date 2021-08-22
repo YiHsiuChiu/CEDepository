@@ -7,7 +7,7 @@ const secp256k1 = require('secp256k1');
 let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
 
 var SerialPort = require('serialport');
-var delay = require('delay');
+// var delay = require('delay');
 
 // let CriticalEvent = {
 //     "vin": "aji0922",
@@ -42,7 +42,7 @@ class CEDP {
 
             //設定serial port
             // var port = new SerialPort('/dev/ttyACM0', {
-                var port = new SerialPort('COM4', {
+                var port = new SerialPort('COM3', {
                 baudRate: 115200
             });
             // console.log(port);
@@ -93,13 +93,13 @@ class CEDP {
                                 let txParams = {
                                     nonce: newNonce,
                                     gasPrice: parseInt(gasPrice),
-                                    gas: '0xF4240',
+                                    gas: 2000000,
                                     from: account,
                                     to: to,
                                     // value: '0xDE0B6B3A7640000',
                                     data: sdata,
                                 }
-                                // console.log("  txParams:", txParams);
+                                console.log("  txParams:", txParams);
 
 
                                 const customCommon = Common.forCustomChain(
