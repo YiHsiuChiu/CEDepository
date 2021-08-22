@@ -33,7 +33,8 @@ var SerialPort = require('serialport');
 class CEDP {
     constructor(abi, address) {
         this.abi = abi;
-        this.address = address;
+        console.log(address.toString('hex'))
+        this.address = address.replace(/['"]+/g, '');
     }
     signData(CE) {
         return new Promise((resolve, reject) => {

@@ -1,8 +1,7 @@
 const { fromEvent, of } = require('rxjs');
 var CEDP = require('./CEDP.js');
 var request = require('request');
-let Web3 = require('web3');
-let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
+var gatewayServer = 'http://127.0.0.1:3000';
 
 const QueueLength = 30;
 
@@ -63,12 +62,10 @@ let contractAbi = [
         "type": "function"
     }
 ]
-let contractAddr = '0x91C8FD9C8537726A15465b7a81CBAcE64C547705';
-
-let cedp = new CEDP(contractAbi, contractAddr);
 
 class CEP {
-    constructor(event) {
+    constructor(event,contractAddr) {
+        let cedp = new CEDP(contractAbi, contractAddr);
         const ob = fromEvent(event, 'read');
         ob.subscribe(async (data) => {
             console.log('--- CEP: recieve data from dataProcessor event ---')
@@ -82,17 +79,15 @@ class CEP {
             if (dataQueue.length > 1) {
                 if (crash(JSON.parse(dataQueue[0]), JSON.parse(dataQueue[1]))) {
                     let packet = {"criticalEvent":data,"eventList":dataQueue}
-                    // console.log(JSON.stringify(packet));
                     let raw = await cedp.signData(JSON.stringify(packet));
-                    // console.log(raw);
+                    console.log(raw);
                     console.log('--- CEP: send raw to blockchainGW ---')
-                    // request('http://140.119.163.196:5000/sendRawTransaction?raw=' + raw, function (error, response, body) {
-                    //     if (!error && response.statusCode == 200) {
-                    //         // console.log(response.body);
-                    //         console.log('--- blockchainGW: write data to blockchain ---')
-                    //     }
-                    // });
-                    web3.eth.sendSignedTransaction('0x' + raw).then(receipt => console.log(receipt));
+                    request(gatewayServer+'/gateway/sendRawTransaction/' + raw, function (error, response, body) {
+                        if (!error && response.statusCode == 200) {
+                            console.log(response.body);
+                            console.log('--- blockchainGW: write data to blockchain ---')
+                        }
+                    });
                 }
             }
         });
@@ -117,6 +112,4 @@ function crash(data0, data1) {
     else
         return false;
 }
-
-
 module.exports = CEP;
