@@ -1,5 +1,6 @@
 const { fromEvent, of } = require('rxjs');
 var CEDP = require('./CEDP.js');
+var gatewayServer = 'http://127.0.0.1:3000';
 
 const QueueLength = 30;
 
@@ -60,12 +61,10 @@ let contractAbi = [
         "type": "function"
     }
 ]
-let contractAddr = '0x7CA8aB8fda99eE7563843e84F969123C89c219D9';
-
-let cedp = new CEDP(contractAbi, contractAddr);
 
 class CEP {
-    constructor(event) {
+    constructor(event,contractAddr) {
+        let cedp = new CEDP(contractAbi, contractAddr);
         const ob = fromEvent(event, 'read');
         ob.subscribe(async (data) => {
             console.log('--- CEP: recieve data from dataProcessor event ---')
@@ -79,13 +78,12 @@ class CEP {
             if (dataQueue.length > 1) {
                 if (crash(JSON.parse(dataQueue[0]), JSON.parse(dataQueue[1]))) {
                     let packet = {"criticalEvent":data,"eventList":dataQueue}
-                    // console.log(JSON.stringify(packet));
                     let raw = await cedp.signData(JSON.stringify(packet));
                     // console.log(raw);
                     console.log('--- CEP: send raw to blockchainGW ---')
-                    request('http://140.119.163.196:5000/sendRawTransaction?raw=' + raw, function (error, response, body) {
+                    request(gatewayServer+'/sendRawTransaction?raw=' + raw, function (error, response, body) {
                         if (!error && response.statusCode == 200) {
-                            // console.log(response.body);
+                            console.log(response.body);
                             console.log('--- blockchainGW: write data to blockchain ---')
                         }
                     });

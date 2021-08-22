@@ -5,10 +5,10 @@ var request = require('request');
 // var mongoclient = require('mongodb').MongoClient;
 const EventEmitter = require('events');
 const dataProcessor = new EventEmitter();
+var gatewayServer = 'http://127.0.0.1:3000';
+var carAddress = 'test';
 
 var CEP = require('./CEP.js');
-
-let cep = new CEP(dataProcessor);
 
 let database = null;
 
@@ -16,7 +16,15 @@ mqttclient.on('connect', async function () {
     console.log('--- EDP: connect on mqtt ---');
     // Connect to the db
     // database = await connectDB();
-    mqttclient.subscribe('getData', { qos: 1 });
+    request(gatewayServer+'/getContractAddress?carAddress=' + carAddress, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // console.log(body);
+            let contractAddress = response.body
+            console.log('--- blockchainGW: get contract address ---')
+            let cep = new CEP(dataProcessor,contractAddress);
+            mqttclient.subscribe('getData', { qos: 1 });
+        }
+    });
 });
 
 mqttclient.on('message', async function (topic, message, packet) {
