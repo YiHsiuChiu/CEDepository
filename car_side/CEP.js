@@ -1,6 +1,5 @@
 const { fromEvent, of } = require('rxjs');
 var CEDP = require('./CEDP.js');
-var request = require('request');
 var gatewayServer = 'http://127.0.0.1:3000';
 
 const QueueLength = 30;
@@ -69,7 +68,8 @@ class CEP {
         const ob = fromEvent(event, 'read');
         ob.subscribe(async (data) => {
             console.log('--- CEP: recieve data from dataProcessor event ---')
-            dataQueue.unshift(data);
+            // console.log(data)
+            dataQueue.unshift(JSON.parse(data));
             dataQueueCount += 1;
             if (dataQueueCount > QueueLength) {
                 dataQueue.pop();
@@ -77,12 +77,13 @@ class CEP {
             }
             // console.log(dataQueue)
             if (dataQueue.length > 1) {
-                if (crash(JSON.parse(dataQueue[0]), JSON.parse(dataQueue[1]))) {
-                    let packet = {"criticalEvent":data,"eventList":dataQueue}
+                if (crash(dataQueue[0], dataQueue[1])) {
+                    let packet = {"criticalEvent":JSON.parse(data),"eventList":dataQueue}
+                    // console.log(packet)
                     let raw = await cedp.signData(JSON.stringify(packet));
-                    console.log(raw);
+                    // console.log(raw);
                     console.log('--- CEP: send raw to blockchainGW ---')
-                    request(gatewayServer+'/gateway/sendRawTransaction/' + raw, function (error, response, body) {
+                    request(gatewayServer+'/sendRawTransaction?raw=' + raw, function (error, response, body) {
                         if (!error && response.statusCode == 200) {
                             console.log(response.body);
                             console.log('--- blockchainGW: write data to blockchain ---')
@@ -112,4 +113,6 @@ function crash(data0, data1) {
     else
         return false;
 }
+
+
 module.exports = CEP;
