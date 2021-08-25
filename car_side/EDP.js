@@ -1,12 +1,13 @@
+require('dotenv').config();
 var mqtt = require('mqtt');
-var mqttclient = mqtt.connect('tcp://localhost:1883');
-// var mqttclient = mqtt.connect('mqtt://test.mosquitto.org');
+var mqttclient = mqtt.connect(process.env["MQTT_URL"]);
 var request = require('request');
-// var mongoclient = require('mongodb').MongoClient;
+var mongoclient = require('mongodb').MongoClient;
+var mongourl = process.env["MONGO_URL"];
 const EventEmitter = require('events');
 const dataProcessor = new EventEmitter();
-var gatewayServer = 'http://127.0.0.1:3000';
-var carAddress = 'test';
+var gatewayServer = process.env['GATEWAY_URL'];
+var carAddress = process.env['CAR_ADDRESS'];
 
 var CEP = require('./CEP.js');
 
@@ -15,7 +16,7 @@ let database = null;
 mqttclient.on('connect', async function () {
     console.log('--- EDP: connect on mqtt ---');
     // Connect to the db
-    // database = await connectDB();
+    database = await connectDB();
     request(gatewayServer+'/gateway/getContractAddress/' + carAddress, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body);
@@ -35,7 +36,7 @@ mqttclient.on('message', async function (topic, message, packet) {
 
     dataProcessor.emit('read', data);
 
-    // writeData(JSON.parse(data));
+    writeData(JSON.parse(data));
     // request('http://140.119.163.196:5000/backupData?data=' + data, function (error, response, body) {
     //     if (!error && response.statusCode == 200) {
     //         // console.log(body);
@@ -55,10 +56,10 @@ mqttclient.on('message', async function (topic, message, packet) {
 function connectDB() {
     // Connect to the db
     return new Promise((resolve, reject) => {
-        mongoclient.connect("mongodb://localhost:27017/", function (err, db) {
+        mongoclient.connect(mongourl, function (err, db) {
             if (err) throw err;
             resolve(db);
-            console.log('mongodb is running!');
+            console.log('--- EDP: connect on localDB ---');
             // db.close(); //關閉連線
         });
     });

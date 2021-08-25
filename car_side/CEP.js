@@ -1,9 +1,9 @@
 const { fromEvent, of } = require('rxjs');
 var CEDP = require('./CEDP.js');
 var request = require('request');
-var gatewayServer = 'http://127.0.0.1:3000';
+var gatewayServer = process.env['GATEWAY_URL'];
 
-const QueueLength = 30;
+const QueueLength = 15;
 
 let dataQueue = [];
 let dataQueueCount = 0;
@@ -70,15 +70,15 @@ class CEP {
         ob.subscribe(async (data) => {
             console.log('--- CEP: recieve data from dataProcessor event ---')
             // console.log(data)
-            dataQueue.unshift(JSON.parse(data));
+            dataQueue.push(JSON.parse(data));
             dataQueueCount += 1;
             if (dataQueueCount > QueueLength) {
-                dataQueue.pop();
+                dataQueue.shift();
                 dataQueueCount -= 1;
             }
             // console.log(dataQueue)
             if (dataQueue.length > 1) {
-                if (crash(dataQueue[0], dataQueue[1])) {
+                if (crash(dataQueue[dataQueueCount-1], dataQueue[dataQueueCount-2])) {
                     let packet = {"criticalEvent":JSON.parse(data),"eventList":dataQueue}
                     // console.log(packet)
                     let raw = await cedp.signData(JSON.stringify(packet));
@@ -97,10 +97,12 @@ class CEP {
 }
 
 function crash(data0, data1) {
-    let X0 = Math.abs(data0.acceleration.replace(/\s*/g, "").substr(1, 1));
-    let Y0 = Math.abs(data0.acceleration.replace(/\s*/g, "").substr(3, 1));
-    let X1 = Math.abs(data1.acceleration.replace(/\s*/g, "").substr(1, 1));
-    let Y1 = Math.abs(data1.acceleration.replace(/\s*/g, "").substr(3, 1));
+    let cur = data0.acceleration.replace(/\s*/g, "").replace(/\(|\)/g, "").split(',');
+    let pre = data1.acceleration.replace(/\s*/g, "").replace(/\(|\)/g, "").split(',');
+    let X0 = Math.abs(cur[0]);
+    let Y0 = Math.abs(cur[1]);
+    let X1 = Math.abs(pre[0]);
+    let Y1 = Math.abs(pre[1]);
     let deltaX = Math.abs(X0 - X1);
     let deltaY = Math.abs(Y0 - Y1);
 

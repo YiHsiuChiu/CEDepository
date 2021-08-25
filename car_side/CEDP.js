@@ -41,7 +41,7 @@ class CEDP {
 
             //設定serial port
             // var port = new SerialPort('/dev/ttyACM0', {
-            var port = new SerialPort('/dev/tty.usbmodem0006839330511', {
+            var port = new SerialPort(process.env['TH_SERIALPORT'], {
                 // var port = new SerialPort('COM4', {
                 baudRate: 115200
             });
@@ -93,7 +93,7 @@ class CEDP {
                                 let txParams = {
                                     nonce: newNonce,
                                     gasPrice: parseInt(gasPrice),
-                                    gas: 2000000,
+                                    gas: 5000000,
                                     from: account,
                                     to: to.replace(/\"/g, ""),
                                     // value: '0xDE0B6B3A7640000',
