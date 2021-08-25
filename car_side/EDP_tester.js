@@ -21,7 +21,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0,0,0)",
+        "acceleration": "[0,0,0]",
         "note": "",
     },
     {
@@ -41,7 +41,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0,0,0)",
+        "acceleration": "[0,0,0]",
         "note": "",
     },
     {
@@ -61,7 +61,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0,0,0)",
+        "acceleration": "[0,0,0]",
         "note": "",
     },
     {
@@ -81,7 +81,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0,0,0)",
+        "acceleration": "[0,0,0]",
         "note": "",
     },
     {
@@ -101,7 +101,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0,0,0)",
+        "acceleration": "[0,0,0]",
         "note": "",
     },
     {
@@ -121,7 +121,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0,0,0)",
+        "acceleration": "[0,0,0]",
         "note": "",
     },
     {
@@ -141,7 +141,7 @@ let packet = [
         "tirePressureLR": 37,
         "tirePressureRR": 34,
         "status": {},
-        "acceleration": "(0.1,0,0)",
+        "acceleration": "[0.1,0,0]",
         "note": "",
     },
     {
@@ -161,7 +161,7 @@ let packet = [
         "tirePressureLR": 38,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.2,0.1,0)",
+        "acceleration": "[0.2,0.1,0]",
         "note": "",
     },
     {
@@ -181,7 +181,7 @@ let packet = [
         "tirePressureLR": 39,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.2,0.2,0)",
+        "acceleration": "[0.2,0.2,0]",
         "note": "",
     },
     {
@@ -201,7 +201,7 @@ let packet = [
         "tirePressureLR": 40,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.3,0.2,0)",
+        "acceleration": "[0.3,0.2,0]",
         "note": "",
     },
     {
@@ -221,7 +221,7 @@ let packet = [
         "tirePressureLR": 32,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.4,0.1,0)",
+        "acceleration": "[0.4,0.1,0]",
         "note": "",
     },
     {
@@ -241,7 +241,7 @@ let packet = [
         "tirePressureLR": 35,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.5,0.2,0)",
+        "acceleration": "[0.5,0.2,0]",
         "note": "",
     },
     {
@@ -261,7 +261,7 @@ let packet = [
         "tirePressureLR": 37,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.6,0.1,0)",
+        "acceleration": "[0.6,0.1,0]",
         "note": "",
     },
     {
@@ -281,7 +281,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.6,0.3,0)",
+        "acceleration": "[0.6,0.3,0]",
         "note": "",
     },
     {
@@ -301,7 +301,7 @@ let packet = [
         "tirePressureLR": 36,
         "tirePressureRR": 36,
         "status": {},
-        "acceleration": "(0.1,0,0)",
+        "acceleration": "[0.1,0,0]",
         "note": "",
     }
 ]

@@ -97,8 +97,8 @@ class CEP {
 }
 
 function crash(data0, data1) {
-    let cur = data0.acceleration.replace(/\s*/g, "").replace(/\(|\)/g, "").split(',');
-    let pre = data1.acceleration.replace(/\s*/g, "").replace(/\(|\)/g, "").split(',');
+    let cur = data0.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
+    let pre = data1.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
     let X0 = Math.abs(cur[0]);
     let Y0 = Math.abs(cur[1]);
     let X1 = Math.abs(pre[0]);
