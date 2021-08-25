@@ -95,23 +95,20 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
 	}
 	db = await client.db('CarData');
 	db = db.collection('Registration')
-	console.log('Database connected: Cardata');
+	// for search page to judge whether the transaction is correct
 	let result = await db.find({}).toArray();
 	for (let obj of result) {
 		contract_list.push(obj.contractAddress);
 	}
-	console.log(contract_list)
+	// console.log(contract_list)
 });
 
 
 const getCars = async (req, res) => {
 	let result = await db.find({}).toArray();
-	console.log(result);
 	return res.status(200).json({ code: 20000, data: result })
-	// res.send(result);
 }
 const addCar = async (req, res) => {
-	console.log(req.body)
 	var newContract = new web3.eth.Contract(abi);
 	let sdata = newContract.deploy({
 		data: '0x' + bytecode.object,
@@ -146,9 +143,9 @@ const addCar = async (req, res) => {
 			var raw = tx.serialize();
 			// console.log(raw);
 			web3.eth.sendSignedTransaction('0x' + raw.toString('hex')).then(receipt => {
-				console.log(receipt.contractAddress) // instance with the new contract address
+				// console.log(receipt.contractAddress) // instance with the new contract address
 				contract_list.push(receipt.contractAddress);
-				console.log(contract_list)
+				// add a new car in MongoDB
 				var newobj = {
 					carAddress: req.body.carAddress,
 					carID: uuidv4(),
@@ -156,7 +153,7 @@ const addCar = async (req, res) => {
 				}
 				db.insertOne(newobj, function (err, res) {
 					if (err) throw err;
-					console.log("1 document inserted");
+					// console.log("1 document inserted");
 				});
 
 				return res.status(200).json({ code: 20000, data: newobj })
@@ -169,28 +166,28 @@ const addCar = async (req, res) => {
 
 }
 const deleteCar = async (req, res) => {
-	console.log("id")
 	var id = req.params.id;
-	console.log(id)
 	var myquery = { carAddress: id };
 	let result = await db.find(myquery).toArray();
-	console.log('result');
-	console.log(result);
+
+	// delete contractaddress of the contract_list
 	const index = contract_list.indexOf(result[0].contractAddress);
 	if (index > -1) {
 		contract_list.splice(index, 1);
 	}
+	// delete the car in MongoDB
 	db.deleteOne(myquery, function (err, res) {
 		if (err) throw err;
-		console.log("1 document deleted");
+		// console.log("1 document deleted");
 	})
 
 	return res.status(200).json({ code: 20000, data: 'success' })
 }
+
 function get_contract_list() {
-	console.log(contract_list)
 	return contract_list
 }
+
 module.exports = {
 	getCars,
 	addCar,

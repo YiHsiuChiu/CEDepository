@@ -25,7 +25,7 @@ function getContractAddress(carAddress) {
     // Connect to the db
     return new Promise(async(resolve, reject) => {
         let result = await db.find({carAddress:carAddress}).toArray();
-        console.log(result[0].contractAddress)
+        // console.log(result[0].contractAddress)
         resolve(result[0].contractAddress)
         // web3.eth.sendSignedTransaction('0x' + raw).then(receipt => resolve(receipt))
     });
