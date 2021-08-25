@@ -1,6 +1,6 @@
 var mqtt = require('mqtt');
-// var mqttclient = mqtt.connect('tcp://localhost:1883');
-var mqttclient = mqtt.connect('mqtt://test.mosquitto.org');
+var mqttclient = mqtt.connect('tcp://localhost:1883');
+// var mqttclient = mqtt.connect('mqtt://test.mosquitto.org');
 var request = require('request');
 // var mongoclient = require('mongodb').MongoClient;
 const EventEmitter = require('events');
@@ -16,11 +16,11 @@ mqttclient.on('connect', async function () {
     console.log('--- EDP: connect on mqtt ---');
     // Connect to the db
     // database = await connectDB();
-    request(gatewayServer+'/getContractAddress?carAddress=' + carAddress, function (error, response, body) {
+    request(gatewayServer+'/gateway/getContractAddress/' + carAddress, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log(body);
             let contractAddress = response.body
-            // console.log('--- blockchainGW: get contract address ---')
+            console.log('--- blockchainGW: get contract address ---')
             let cep = new CEP(dataProcessor,contractAddress);
             mqttclient.subscribe('getData', { qos: 1 });
         }

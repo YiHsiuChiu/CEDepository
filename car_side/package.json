@@ -1,8 +1,8 @@
 {
-  "name": "itri_v2x",
+  "name": "ced",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "EDP.js",
   "directories": {
     "test": "test"
   },

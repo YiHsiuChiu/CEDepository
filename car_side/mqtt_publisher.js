@@ -1,6 +1,6 @@
 var mqtt = require('mqtt');
-// var client  = mqtt.connect('tcp://localhost:1883');
-var client = mqtt.connect('mqtt://test.mosquitto.org');
+var client  = mqtt.connect('tcp://localhost:1883');
+// var client = mqtt.connect('mqtt://test.mosquitto.org');
 
 let packet =
 {

@@ -1,5 +1,6 @@
 const { fromEvent, of } = require('rxjs');
 var CEDP = require('./CEDP.js');
+var request = require('request');
 var gatewayServer = 'http://127.0.0.1:3000';
 
 const QueueLength = 30;
@@ -83,7 +84,7 @@ class CEP {
                     let raw = await cedp.signData(JSON.stringify(packet));
                     // console.log(raw);
                     console.log('--- CEP: send raw to blockchainGW ---')
-                    request(gatewayServer+'/sendRawTransaction?raw=' + raw, function (error, response, body) {
+                    request(gatewayServer+'/gateway/sendRawTransaction/' + raw, function (error, response, body) {
                         if (!error && response.statusCode == 200) {
                             console.log(response.body);
                             console.log('--- blockchainGW: write data to blockchain ---')

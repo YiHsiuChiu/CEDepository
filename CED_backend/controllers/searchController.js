@@ -387,17 +387,17 @@ async function checkBlock() {
                             ];
                             const decodedParameters = web3.eth.abi.decodeParameters(typesArray, result.logs[0].data);
                             // console.log(decodedParameters.data)
-                            let data1 = JSON.parse(JSON.parse(decodedParameters.data))
+                            let data = JSON.parse(JSON.parse(decodedParameters.data))
                             // console.log(data['criticalEvent'])
-                            let c_data = data1["criticalEvent"]
-                            console.log(data1)
+                            let c_data = data["criticalEvent"]
+                            console.log(data)
                             console.log(c_data)
-                            let e_data = data1.eventList
+                            let e_data = data.eventList
                             // let check = getCarData(carid)
                             // if (check.length == 0) {
                             var newobj = {
                                 "carID": carid,
-                                "timestamp": JSON.parse(c_data).timestamp,
+                                "timestamp": c_data.timestamp,
                                 "criticalEvent": c_data,
                                 "eventList": e_data,
                                 "index": count

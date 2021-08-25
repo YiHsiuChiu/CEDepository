@@ -104,7 +104,6 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
 
 
 const getCars = async (req, res) => {
-	console.log("hi");
 	let result = await db.find({}).toArray();
 	console.log(result);
 	return res.status(200).json({ code: 20000, data: result })
