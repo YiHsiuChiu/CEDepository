@@ -6,8 +6,8 @@ cd cloud_side
 npm install
 ```
 ### 2. 設定.env檔 (cloud_side內)
-將MongoDB的 url 及區塊鏈帳戶的私鑰分別填入```MONGODB_URL```及```BLOCKCHAIN_ACCOUNT_PrivKey```
-Note : 請事先在 MongoDB 創建 CarData 的 Collection (db name: CarData, collection name:Event,Registration)
+將 MongoDB 的 url 及區塊鏈帳戶的私鑰分別填入```MONGODB_URL```及```BLOCKCHAIN_ACCOUNT_PrivKey```
+Note : 請事先在 MongoDB 創建 CarData 的 Collection (db name: CarData, collection name: Event,Registration)
 ### 3. 啟動 Server 
 ```
 npm start
@@ -35,13 +35,9 @@ cd car_side
 npm install
 ```
 ### 2. 設定.env檔 (car_side內)
-將MongoDB、gateway及MQTT的 url 及TH晶片的serialport與車機辨識地址填入env檔中
+將 MongoDB、gateway、MQTT 的 url 及 TH 晶片的 serialport 與車機辨識地址填入env檔中
 Note : 請事先在 MongoDB 創建 CED 的 Collection (db name: CED, collection name: EventData)
 ### 3. 啟動模組
 ```
 node EDP.js
 ```
-
-
-
-
