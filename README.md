@@ -6,7 +6,7 @@ cd cloud_side
 npm install
 ```
 ### 2. 設定.env檔 (cloud_side內)
-將 MongoDB 的 url 及區塊鏈帳戶的私鑰分別填入```MONGODB_URL```及```BLOCKCHAIN_ACCOUNT_PrivKey```
+將 MongoDB 的 url 及區塊鏈帳戶的私鑰分別填入```MONGODB_URL```及```BLOCKCHAIN_ACCOUNT_PrivKey```  
 Note : 請事先在 MongoDB 創建 CarData 的 Collection (db name: CarData, collection name: Event,Registration)
 ### 3. 啟動 Server 
 ```
@@ -35,15 +35,15 @@ cd car_side
 npm install
 ```
 ### 2. 設定.env檔 (car_side內)
-將 MongoDB、gateway、MQTT 的 url 及 TH 晶片的 serialport 與車機辨識地址填入 env 檔中
+將 MongoDB、gateway、MQTT 的 url 及 TH 晶片的 serialport 與車機辨識地址填入 env 檔中  
 Note : 請事先在 MongoDB 創建 CED 的 Collection (db name: CED, collection name: EventData)
 ### 3. 啟動模組
 ```
 node EDP.js
 ```
 ### 4. 車機端功能說明
-EDP(ECU Data Processor): 透過 mqtt topic 蒐集車輛資料，將收到資料透過 dataProcessor event 傳至 CEP 進行 CE 判斷 並備份資料至 local DB(CED) 中
-CEP(Critical Event Processor): 依照 CE 條件判斷車輛是否發生異常狀態(CE)，若發生 CE 將事發經過資料傳至 CEDP 執行簽章動作
-CEDP(Critical Event Deposit Processor): 將資料透過 TH 晶片簽章，透過 http api 傳送至 blockchain gateway 
+EDP(ECU Data Processor): 透過 mqtt topic 蒐集車輛資料，將收到資料透過 dataProcessor event 傳至 CEP 進行 CE 判斷 並備份資料至 local DB(CED) 中  
+CEP(Critical Event Processor): 依照 CE 條件判斷車輛是否發生異常狀態(CE)，若發生 CE 將事發經過資料傳至 CEDP 執行簽章動作  
+CEDP(Critical Event Deposit Processor): 將資料透過 TH 晶片簽章，透過 http api 傳送至 blockchain gateway  
 
 
