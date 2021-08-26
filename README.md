@@ -13,17 +13,15 @@ Note : 請事先在 MongoDB 創建 CarData 的 Collection (db name: CarData, col
 npm start
 ```
 ### 4. 後端平台功能說明
-#### a. 開啟瀏覽器後，輸入```localhost:3000``` 會顯示登入畫面，接著直接按 Login 進入後端平台
+#### a. 開啟瀏覽器後，輸入```localhost:3000``` 會顯示登入畫面，接著直接按 Login 進入後端平台  
 ![](https://i.imgur.com/7XPE6YW.png)
 
 #### b. 註冊頁面(Register)
-點選New Car按鈕，並輸入Car Address來新增車輛
+點選New Car按鈕，並輸入Car Address來新增車輛  
 ![](https://i.imgur.com/G9qHWuV.png)
 
 #### c. 搜尋頁面(Search_page)
-輸入 Car ID 來搜尋觸發事件，可點選 CriticalEvent 及 EventList 來查看事件的詳細資料
-![](https://i.imgur.com/JBxLr5c.png)
-
+輸入 Car ID 來搜尋觸發事件，可點選 CriticalEvent 及 EventList 來查看事件的詳細資料  
 ![](https://i.imgur.com/UuufhuA.png)
 
 ![](https://i.imgur.com/zu2IOVX.png)
