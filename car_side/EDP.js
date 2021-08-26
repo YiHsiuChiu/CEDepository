@@ -66,8 +66,8 @@ function connectDB() {
 }
 
 function writeData(packet) {
-    var dbo = database.db("ITRI");
-    dbo.collection("CarData").insertOne(packet, function (err, res) {
+    var dbo = database.db("CED");
+    dbo.collection("EventData").insertOne(packet, function (err, res) {
         if (err) throw err;
     });
     console.log("--- EDP: insert data to localDB ---");
