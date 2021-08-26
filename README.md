@@ -42,8 +42,8 @@ Note : 請事先在 MongoDB 創建 CED 的 Collection (db name: CED, collection 
 node EDP.js
 ```
 ### 4. 車機端功能說明
-EDP(ECU Data Processor): 透過 mqtt topic 蒐集車輛資料，將收到資料透過 dataProcessor event 傳至 CEP 進行 CE 判斷 並備份資料至 local DB(CED) 中  
-CEP(Critical Event Processor): 依照 CE 條件判斷車輛是否發生異常狀態(CE)，若發生 CE 將事發經過資料傳至 CEDP 執行簽章動作  
-CEDP(Critical Event Deposit Processor): 將資料透過 TH 晶片簽章，透過 http api 傳送至 blockchain gateway  
+#### a. EDP(ECU Data Processor): 透過 mqtt topic 蒐集車輛資料，將收到資料透過 dataProcessor event 傳至 CEP 進行 CE 判斷 並備份資料至 local DB(CED) 中  
+#### b. CEP(Critical Event Processor): 依照 CE 條件判斷車輛是否發生異常狀態(CE)，若發生 CE 將事發經過資料傳至 CEDP 執行簽章動作  
+#### c. CEDP(Critical Event Deposit Processor): 將資料透過 TH 晶片簽章，透過 http api 傳送至 blockchain gateway  
 
 
