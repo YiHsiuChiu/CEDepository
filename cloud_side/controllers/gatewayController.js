@@ -6,12 +6,12 @@ let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkse
 
 
 MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, async (err, client) => {
-	if (err) {
-		console.log(err);
-	}
-	db = await client.db('CarData');
-	db = db.collection('Registration')
-	console.log('Database connected: Cardata');
+    if (err) {
+        console.log(err);
+    }
+    db = await client.db('CarData');
+    db = db.collection('Registration')
+    console.log('Database connected: Cardata');
 
 });
 
@@ -23,8 +23,8 @@ function sendRawTransaction(raw) {
 }
 function getContractAddress(carAddress) {
     // Connect to the db
-    return new Promise(async(resolve, reject) => {
-        let result = await db.find({carAddress:carAddress}).toArray();
+    return new Promise(async (resolve, reject) => {
+        let result = await db.find({ carAddress: carAddress }).toArray();
         // console.log(result[0].contractAddress)
         resolve(result[0].contractAddress)
         // web3.eth.sendSignedTransaction('0x' + raw).then(receipt => resolve(receipt))
@@ -36,9 +36,12 @@ async function SendRawTransaction(req, res) {
     // console.log(myURL)
     // console.log('get request (sendRawTransaction)');
     // let raw = myURL.searchParams.get('raw');
-    var result = await sendRawTransaction(req.params.name);
-    // console.log(result);
+    // console.log(req.body.raw);
+
+    var result = await sendRawTransaction(req.body.raw);
     res.end(JSON.stringify(result));
+
+    // console.log(result);
 }
 
 async function GetContractAddress(req, res) {

@@ -3,7 +3,7 @@ var CEDP = require('./CEDP.js');
 var request = require('request');
 var gatewayServer = process.env['GATEWAY_URL'];
 
-const QueueLength = 15;
+const QueueLength = 30;
 
 let dataQueue = [];
 let dataQueueCount = 0;
@@ -82,14 +82,19 @@ class CEP {
                     let packet = {"criticalEvent":JSON.parse(data),"eventList":dataQueue}
                     // console.log(packet)
                     let raw = await cedp.signData(JSON.stringify(packet));
-                    // console.log(raw);
                     console.log('--- CEP: send raw to blockchainGW ---')
-                    request(gatewayServer+'/gateway/sendRawTransaction/' + raw, function (error, response, body) {
+                    request.post({url:gatewayServer+'/gateway/sendRawTransaction', form: { 'raw': raw }}, function(error,response,body){
                         if (!error && response.statusCode == 200) {
-                            console.log(response.body);
+                            // console.log(response.body);
                             console.log('--- blockchainGW: write data to blockchain ---')
                         }
-                    });
+                    })
+                    // request(gatewayServer+'/gateway/sendRawTransaction/' + raw, function (error, response, body) {
+                    //     if (!error && response.statusCode == 200) {
+                    //         console.log(response.body);
+                    //         console.log('--- blockchainGW: write data to blockchain ---')
+                    //     }
+                    // });
                 }
             }
         });
