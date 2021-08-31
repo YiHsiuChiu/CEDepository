@@ -36,7 +36,7 @@ async function SendRawTransaction(req, res) {
     // console.log(myURL)
     // console.log('get request (sendRawTransaction)');
     // let raw = myURL.searchParams.get('raw');
-    // console.log(req.body.raw);
+    console.log(req.body.raw);
 
     var result = await sendRawTransaction(req.body.raw);
     res.end(JSON.stringify(result));
