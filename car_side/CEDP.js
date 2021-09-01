@@ -93,7 +93,7 @@ class CEDP {
                                 let txParams = {
                                     nonce: newNonce,
                                     gasPrice: parseInt(gasPrice),
-                                    gas: 5000000,
+                                    gas: 8000000,
                                     from: account,
                                     to: to.replace(/\"/g, ""),
                                     // value: '0xDE0B6B3A7640000',
@@ -150,7 +150,7 @@ class CEDP {
                             console.log('--- CEDP: write command on TH:', '$2_' + hashedTx.toString('hex').substring(32, 64) + '#  ---');
                         });
                     }
-                    else if (buff.match(/\$6_D#/ig) != null) {
+                    else if (buff.match(/\$6_D#/ig) != null && buff.match(/\$6_I#/ig) != null) {
                         //執行sign指令
                         buff = '';
                         port.write('$0_#', function (err) {

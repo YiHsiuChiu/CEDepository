@@ -39,6 +39,7 @@ async function SendRawTransaction(req, res) {
     // console.log(req.body.raw);
 
     var result = await sendRawTransaction(req.body.raw);
+    console.log(result);
     res.end(JSON.stringify(result));
 
     // console.log(result);

@@ -19,7 +19,7 @@ mqttclient.on('connect', async function () {
     database = await connectDB();
     request(gatewayServer+'/gateway/getContractAddress/' + carAddress, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            // console.log(body);
+            console.log(body);
             let contractAddress = response.body
             console.log('--- blockchainGW: get contract address ---')
             let cep = new CEP(dataProcessor,contractAddress);
