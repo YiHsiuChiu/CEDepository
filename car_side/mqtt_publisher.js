@@ -20,7 +20,7 @@ let packet =
     "tirePressureLR": 36,
     "tirePressureRR": 36,
     "status": {},
-    "acceleration": "[0,0,0]",
+    "acceleration": [1,0,0],
     "note": "",
 }
 
