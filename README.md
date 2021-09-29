@@ -36,7 +36,7 @@ npm install
 ```
 ### 2. 設定.env檔 (car_side內)
 將 MongoDB、gateway、MQTT 的 url 及 TH 晶片的 serialport 與車機辨識地址填入 env 檔中  
-Note : 請事先在 MongoDB 創建 CED 的 Collection (db name: CED, collection name: EventData)
+Note : 請事先在 MongoDB 創建 CED 的 Collection (db name: CED, collection name: EventData)  
 Note : 新版本 MongoDB 需運行於64bits作業系統上，安裝前請確認車機作業系統規格
 ### 3. 啟動模組
 ```
