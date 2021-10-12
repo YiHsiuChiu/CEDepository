@@ -18,7 +18,11 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
 function sendRawTransaction(raw) {
     // Connect to the db
     return new Promise((resolve, reject) => {
-        web3.eth.sendSignedTransaction('0x' + raw).then(receipt => resolve(receipt))
+        web3.eth.sendSignedTransaction('0x' + raw)
+        .once('receipt', function(receipt){ resolve(receipt) })
+        .on('error', function(error){ reject(error) })
+        // .then(receipt => resolve(receipt))
+
     });
 }
 function getContractAddress(carAddress) {
@@ -37,10 +41,13 @@ async function SendRawTransaction(req, res) {
     // console.log('get request (sendRawTransaction)');
     // let raw = myURL.searchParams.get('raw');
     // console.log(req.body.raw);
-
-    var result = await sendRawTransaction(req.body.raw);
-    // console.log(result);
-    res.end(JSON.stringify(result));
+    try{
+        var result = await sendRawTransaction(req.body.raw);
+        // console.log(result);
+        res.end(JSON.stringify(result));
+    }catch (error) {
+        res.status(404).end();
+    }
 
     // console.log(result);
 }
