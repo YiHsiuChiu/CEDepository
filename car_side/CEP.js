@@ -94,7 +94,7 @@ class CEP {
                 }
             }
             // console.log(dataQueue)
-            if (crash(dataQueue, dataQueueCount)) {
+            if (crash(dataQueue, dataQueueCount)||turning(dataQueue, dataQueueCount)) {
                 try {
                     await uploadData(data, dataQueue);
                     scheduleCount = 0;
@@ -161,6 +161,31 @@ function crash(queue, count) {
     else
         return false;
 }
+
+function turning(queue, count) {
+    // let cur = data0.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
+    // let pre = data1.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
+    if (count < 5)
+        return false;
+    let wheelPosQueue = queue.map(obj => obj.steeringWheelPos);
+    if (count >= 5) {
+        if(wheelPosQueue.slice(-5).filter(x => Math.abs(x)>300).length == 5){
+            return true;
+        }
+    }
+    if (count >= 10) {
+        if(wheelPosQueue.slice(-10).filter(x => Math.abs(x)>200).length == 10){
+            return true;
+        }
+    }
+    if (count >= 15) {
+        if(wheelPosQueue.slice(-15).filter(x => Math.abs(x)>120).length == 15){
+            return true;
+        }
+    }
+    return false;
+}
+
 
 
 module.exports = CEP;
