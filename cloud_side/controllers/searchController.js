@@ -44,8 +44,8 @@ async function checkBlock() {
                     if (result.logs[0] != undefined) {
                         // check whether the contract is in the contract_list
                         const index = contract_list.indexOf(result.logs[0].address);
-                        let carid = await getcarID(result.logs[0].address);
                         if (index > -1) {
+                            let carid = await getcarID(result.logs[0].address);
                             const typesArray = [
                                 { type: 'string', name: 'data' },
                             ];
