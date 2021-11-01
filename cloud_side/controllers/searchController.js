@@ -53,12 +53,14 @@ async function checkBlock() {
                             
                             let data = JSON.parse(JSON.parse(decodedParameters.data))
                             let c_data = data["criticalEvent"]
+                            let eventName = data["eventName"]
                             let e_data = data.eventList
 
                             // insert new car data in the MongoDB
                             var newobj = {
                                 "carID": carid,
                                 "timestamp": c_data.timestamp,
+                                "eventName": eventName,
                                 "criticalEvent": c_data,
                                 "eventList": e_data,
                                 "index": count

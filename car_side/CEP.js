@@ -12,7 +12,6 @@ let cedpMutex = true;
 let scheduleCount = -1;
 let scheduleData = null;
 
-
 let contractAbi = [
     {
         "inputs": [],
@@ -94,9 +93,10 @@ class CEP {
                 }
             }
             // console.log(dataQueue)
-            if (crash(dataQueue, dataQueueCount)||turning(dataQueue, dataQueueCount)) {
+            let CEName =testCE(dataQueue, dataQueueCount);
+            if (CEName != false) {
                 try {
-                    await uploadData(data, dataQueue);
+                    await uploadData(data, dataQueue, CEName);
                     scheduleCount = 0;
                     scheduleData = data;
                     dataQueue = [];
@@ -107,12 +107,12 @@ class CEP {
     }
 }
 
-function uploadData(critical, list) {
+function uploadData(critical, list, CEName) {
     return new Promise(async (resolve, reject) => {
         if (cedpMutex == false)
             return reject();
         cedpMutex = false;
-        let packet = { "criticalEvent": JSON.parse(critical), "eventList": list }
+        let packet = { "eventName": CEName, "criticalEvent": JSON.parse(critical), "eventList": list }
         // console.log(packet)
         let raw = await cedp.signData(JSON.stringify(packet));
         console.log('--- CEP: send raw to blockchainGW ---')
@@ -131,6 +131,15 @@ function uploadData(critical, list) {
         //     }
         // });
     })
+}
+
+function testCE(dataQueue, dataQueueCount) {
+    if(crash(dataQueue, dataQueueCount))
+        return 'crash'
+    else if(turning(dataQueue, dataQueueCount))
+        return 'turning'
+    else    
+        return false;
 }
 
 function crash(queue, count) {
