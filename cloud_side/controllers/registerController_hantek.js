@@ -93,7 +93,7 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
 	if (err) {
 		console.log(err);
 	}
-	db = await client.db('CarData');
+	db = await client.db('hantek_CarData');
 	db = db.collection('Registration')
 	// for search page to judge whether the transaction is correct
 	let result = await db.find({}).toArray();

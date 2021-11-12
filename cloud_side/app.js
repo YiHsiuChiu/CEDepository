@@ -9,8 +9,11 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var registerRouter = require('./routes/register');
+var registerRouter_hantek = require('./routes/register_hantek');
 var searchRouter = require('./routes/search');
+var searchRouter_hantek = require('./routes/search_hantek');
 var gatewayRouter = require('./routes/gateway');
+var gatewayRouter_hantek = require('./routes/gateway_hantek');
 
 var app = express();
 
@@ -28,8 +31,11 @@ app.use(express.static(path.join(__dirname, 'dist')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/register', registerRouter);
+app.use('/register_hantek', registerRouter_hantek);
 app.use('/search', searchRouter);
+app.use('/search_hantek', searchRouter_hantek);
 app.use('/gateway', gatewayRouter);
+app.use('/gateway_hantek', gatewayRouter_hantek);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

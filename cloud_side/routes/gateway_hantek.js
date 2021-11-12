@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const gatewayController = require('../controllers/gatewayController');
+const gatewayController = require('../controllers/gatewayController_hantek');
 
 router.post('/sendRawTransaction/', gatewayController.SendRawTransaction);
 

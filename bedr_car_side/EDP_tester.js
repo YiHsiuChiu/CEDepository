@@ -606,7 +606,7 @@ let packet = [
 
 client.on('connect', async function () {
     for(var i=0;i<packet.length;i++){
-        client.publish('getData', JSON.stringify(packet[i]), { qos: 1});
+        client.publish('bedr/vid', JSON.stringify(packet[i]), { qos: 1});
         console.log('publish:', i+1);
         await delay(1000);
     }

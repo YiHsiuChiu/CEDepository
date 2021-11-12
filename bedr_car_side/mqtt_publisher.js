@@ -67,7 +67,7 @@ client.on('connect', async function () {
     // }
 
     for (var i = 0; i < 16; i++) {
-        client.publish('getData', JSON.stringify(packet1), { qos: 1 });
+        client.publish('bedr/vid', JSON.stringify(packet1), { qos: 1 });
         console.log('publish:', i + 1);
 
         // console.log('publish:', JSON.stringify(packet));

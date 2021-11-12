@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const registerController = require('../controllers/registerController');
+const registerController = require('../controllers/registerController_hantek');
 // middleware that is specific to this router
 
 router.post('/addCar',registerController.addCar );

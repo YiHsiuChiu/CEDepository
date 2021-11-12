@@ -1,7 +1,7 @@
 require('dotenv').config();
 var mqtt = require('mqtt');
 var mqttclient = mqtt.connect(process.env["MQTT_URL"]);
-var mqttTopic = process.env["MQTT_TOPIC"];
+var bedrMqttTopic = process.env["BEDR_MQTT_TOPIC"];
 var request = require('request');
 var mongoclient = require('mongodb').MongoClient;
 var mongourl = process.env["MONGO_URL"];
@@ -24,7 +24,7 @@ mqttclient.on('connect', async function () {
             let contractAddress = response.body
             console.log('--- blockchainGW: get contract address ---')
             let cep = new CEP(dataProcessor,contractAddress);
-            mqttclient.subscribe(mqttTopic, { qos: 1 });
+            mqttclient.subscribe(bedrMqttTopic, { qos: 1 });
         }
     });
 });

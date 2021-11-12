@@ -3,7 +3,7 @@ let url = process.env["MONGODB_URL"];
 let crypto = require('crypto');
 let Web3 = require('web3')
 let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
-const registerController = require('../controllers/registerController');
+const registerController = require('./registerController_hantek');
 let contract_list = registerController.get_contract_list();
 let db = null;
 let register_db = null;
@@ -14,7 +14,7 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
     if (err) {
         console.log(err);
     }
-    db = await client.db('CarData');
+    db = await client.db('hantek_CarData');
     register_db = db.collection('Registration')
     db = db.collection('Event')
 });
@@ -50,19 +50,12 @@ async function checkBlock() {
                                 { type: 'string', name: 'data' },
                             ];
                             const decodedParameters = web3.eth.abi.decodeParameters(typesArray, result.logs[0].data);
-                            
-                            let data = JSON.parse(JSON.parse(decodedParameters.data))
-                            let c_data = data["criticalEvent"]
-                            let eventName = data["eventName"]
-                            let e_data = data.eventList
-
+                            let data = JSON.parse(decodedParameters.data)
                             // insert new car data in the MongoDB
                             var newobj = {
                                 "carID": carid,
-                                "timestamp": c_data.timestamp,
-                                "eventName": eventName,
-                                "criticalEvent": c_data,
-                                "eventList": e_data,
+                                "time": data['date']+','+data['time'],
+                                "criticalEvent": data,
                                 "index": count
                             }
                             count = count + 1;

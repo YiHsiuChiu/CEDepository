@@ -9,9 +9,9 @@ MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, as
     if (err) {
         console.log(err);
     }
-    db = await client.db('CarData');
+    db = await client.db('hantek_CarData');
     db = db.collection('Registration')
-    console.log('Database connected: Cardata');
+    console.log('Database connected: hantek_Cardata');
 
 });
 
