@@ -11,6 +11,7 @@ let cedp = null;
 let cedpMutex = true;
 let scheduleCount = -1;
 let scheduleData = null;
+let scheduleName = null;
 
 let contractAbi = [
     {
@@ -84,9 +85,10 @@ class CEP {
                 scheduleCount++;
                 if (scheduleCount >= 15) {
                     try {
-                        await uploadData(scheduleData, dataQueue);
+                        await uploadData(scheduleData, dataQueue, scheduleName);
                         scheduleCount = -1;
                         scheduleData = null;
+                        scheduleName = null;
                         dataQueue = [];
                         dataQueueCount = 0;
                     } catch { }
@@ -99,6 +101,7 @@ class CEP {
                     await uploadData(data, dataQueue, CEName);
                     scheduleCount = 0;
                     scheduleData = data;
+                    scheduleName = CEName;
                     dataQueue = [];
                     dataQueueCount = 0;
                 } catch { }
@@ -124,12 +127,6 @@ function uploadData(critical, list, CEName) {
                 cedpMutex = true;
             }
         })
-        // request(gatewayServer+'/gateway/sendRawTransaction/' + raw, function (error, response, body) {
-        //     if (!error && response.statusCode == 200) {
-        //         console.log(response.body);
-        //         console.log('--- blockchainGW: write data to blockchain ---')
-        //     }
-        // });
     })
 }
 
@@ -143,8 +140,6 @@ function testCE(dataQueue, dataQueueCount) {
 }
 
 function crash(queue, count) {
-    // let cur = data0.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
-    // let pre = data1.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
     if (count == 0)
         return false;
     let X0 = Math.abs(queue[count - 1].acceleration[0]);
@@ -160,11 +155,6 @@ function crash(queue, count) {
         deltaY = Math.abs(Y0 - Y1);
     }
 
-    // console.log("X:", X0);
-    // console.log("Y:", Y0);
-    // console.log("deltaX:", deltaX);
-    // console.log("deltaY:", deltaY);
-
     if (X0 > 1.5 || Y0 > 1.5 || deltaX > 0.3 || deltaY > 0.3)
         return true;
     else
@@ -172,8 +162,6 @@ function crash(queue, count) {
 }
 
 function turning(queue, count) {
-    // let cur = data0.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
-    // let pre = data1.acceleration.replace(/\s*/g, "").replace(/\[|\]/g, "").split(',');
     if (count < 5)
         return false;
     let wheelPosQueue = queue.map(obj => obj.steeringWheelPos);

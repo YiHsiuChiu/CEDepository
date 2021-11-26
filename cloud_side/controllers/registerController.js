@@ -112,8 +112,7 @@ const addCar = async (req, res) => {
 	var newContract = new web3.eth.Contract(abi);
 	let sdata = newContract.deploy({
 		data: '0x' + bytecode.object,
-		arguments: [
-		]
+		arguments: []
 	}).encodeABI();
 
 	web3.eth.getTransactionCount('0xfccBFe26448d3Ea0739084cD09ce286189CC2cd2').then(txCount => {

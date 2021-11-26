@@ -30,28 +30,12 @@ mqttclient.on('connect', async function () {
 });
 
 mqttclient.on('message', async function (topic, message, packet) {
-    // message is Buffer
-    // console.log('message received on topic', topic, 'QoS:', packet.qos, 'RETAIN:', packet.retain);
     console.log('--- EDP: recieve data from mqtt ---')
     let data = message.toString();
 
     dataProcessor.emit('read', data);
 
     writeData(JSON.parse(data));
-    // request('http://140.119.163.196:5000/backupData?data=' + data, function (error, response, body) {
-    //     if (!error && response.statusCode == 200) {
-    //         // console.log(body);
-    //         console.log('--- blockchainGW: backup data on mongoDB ---')
-    //     }
-    // });
-    // request('http://148.72.213.191:5000/backupData?data=' + data, function (error, response, body) {
-    //     if (!error && response.statusCode == 200) {
-    //         // console.log(body);
-    //         console.log('--- backupServer: backup data on mongoDB ---')
-    //     }
-    // });
-
-    // client.end();
 });
 
 function connectDB() {

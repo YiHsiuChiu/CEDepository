@@ -3,7 +3,7 @@ let Web3 = require('web3');
 let MongoClient = require('mongodb').MongoClient;
 let url = process.env["MONGODB_URL"];
 let web3 = new Web3(new Web3.providers.HttpProvider("http://trailsblockrpc1.kkservice.cc:8502"));
-
+let db = null;
 
 MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, async (err, client) => {
     if (err) {

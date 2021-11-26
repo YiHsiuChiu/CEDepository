@@ -21,7 +21,7 @@ let packet1 =
     "tirePressureLR": 36,
     "tirePressureRR": 36,
     "status": {},
-    "acceleration": [0, 0, 0],
+    "acceleration": [1, 0, 0],
     "note": "",
 }
 
@@ -66,7 +66,7 @@ client.on('connect', async function () {
     //     await delay(1000);
     // }
 
-    for (var i = 0; i < 16; i++) {
+    for (var i = 0; i < 1; i++) {
         client.publish('bedr/vid', JSON.stringify(packet1), { qos: 1 });
         console.log('publish:', i + 1);
 
